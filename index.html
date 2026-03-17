@@ -13,21 +13,16 @@ body{
   background:linear-gradient(135deg,#ffd6e0,#ffeaf4);
 }
 
-/* CARD */
-.card{
-  background:rgba(255,255,255,0.4);
-  backdrop-filter:blur(15px);
-  border-radius:20px;
-  padding:25px;
-  box-shadow:0 10px 40px rgba(255,77,109,0.2);
-  max-width:350px;
-  text-align:center;
-  animation:fadeIn 0.8s ease;
-}
-
-@keyframes fadeIn{
-  from{opacity:0;transform:translateY(20px);}
-  to{opacity:1;transform:translateY(0);}
+/* BACKGROUND GLOW */
+body::after{
+  content:"";
+  position:absolute;
+  width:500px;
+  height:500px;
+  background:radial-gradient(circle, rgba(255,77,109,0.2), transparent);
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
 }
 
 /* SCREEN */
@@ -38,12 +33,24 @@ body{
   display:flex;
   justify-content:center;
   align-items:center;
-  transition:0.7s;
+  transition:0.6s;
+}
+
+/* CARD */
+.card{
+  background:rgba(255,255,255,0.4);
+  backdrop-filter:blur(15px);
+  border-radius:20px;
+  padding:25px;
+  box-shadow:0 10px 40px rgba(255,77,109,0.2);
+  max-width:350px;
+  text-align:center;
+  z-index:2;
 }
 
 /* TEXT */
 h1{color:#ff4d6d;}
-p{margin-top:10px;color:#444;line-height:1.5;}
+p{margin-top:10px;color:#444;}
 
 /* BUTTON */
 button{
@@ -54,12 +61,9 @@ button{
   background:#ff4d6d;
   color:white;
   cursor:pointer;
-  transition:0.3s;
+  transition:0.2s;
 }
-
-button:hover{
-  transform:scale(1.05);
-}
+button:hover{transform:scale(1.05);}
 
 /* HIDDEN */
 .hidden{
@@ -68,26 +72,43 @@ button:hover{
   transform:scale(0.9);
 }
 
-/* IMAGE */
-img{
+/* FOTO TENGAH */
+#photo{
   width:220px;
   border-radius:15px;
   filter:blur(10px);
-  transform:scale(1.05);
   transition:1.5s;
 }
-.clear{
+#photo.clear{
   filter:blur(0);
-  transform:scale(1);
 }
 
-/* MUSIC PLAYER */
+/* FOTO SAMPING */
+.side-img{
+  position:absolute;
+  width:180px;
+  border-radius:15px;
+  opacity:0;
+  filter:blur(3px);
+  top:50%;
+  transform:translateY(-50%);
+  transition:1s;
+}
+
+.left{ left:8%; transform:translateY(-50%) translateX(-50px) rotate(-8deg); }
+.right{ right:8%; transform:translateY(-50%) translateX(50px) rotate(8deg); }
+
+.side-img.show{
+  opacity:0.7;
+  transform:translateY(-50%) translateX(0) rotate(0);
+}
+
+/* PLAYER */
 .music-player{
   position:fixed;
   bottom:20px;
   left:20px;
   display:flex;
-  align-items:center;
   gap:10px;
   background:rgba(255,255,255,0.4);
   backdrop-filter:blur(10px);
@@ -99,14 +120,19 @@ img{
   width:50px;
   height:50px;
   border-radius:50%;
-  animation:spin 8s linear infinite;
+  animation:spin 8s linear infinite, pulse 2s infinite;
   animation-play-state: paused;
-  filter:none;
 }
 
 @keyframes spin{
   from{transform:rotate(0);}
   to{transform:rotate(360deg);}
+}
+
+@keyframes pulse{
+  0%{transform:scale(1);}
+  50%{transform:scale(1.05);}
+  100%{transform:scale(1);}
 }
 </style>
 </head>
@@ -117,7 +143,6 @@ img{
   <source src="lagu.mp3" type="audio/mpeg">
 </audio>
 
-<!-- PLAYER -->
 <div class="music-player">
   <img src="cover.jpg" id="cover">
   <div>
@@ -130,7 +155,7 @@ img{
 <div id="s1" class="screen">
   <div class="card">
     <h1>🎂 Happy Birthday, Hana</h1>
-    <p>today is all about you</p>
+    <p id="text1"></p>
     <button onclick="start()">open 🎁</button>
   </div>
 </div>
@@ -138,28 +163,29 @@ img{
 <!-- SCREEN 2 -->
 <div id="s2" class="screen hidden">
   <div class="card">
-    <p id="typing"></p>
+    <p id="text2"></p>
     <button onclick="toS3()">next →</button>
   </div>
 </div>
 
 <!-- SCREEN 3 -->
 <div id="s3" class="screen hidden">
+  <img src="foto1.jpg" class="side-img left" id="leftImg">
+  
   <div class="card">
     <img id="photo" src="hana.jpg">
-    <p>still one of my favorite girl 🤷‍♂️</p>
+    <p id="text3"></p>
     <button onclick="toS4()">next →</button>
   </div>
+
+  <img src="foto2.jpg" class="side-img right" id="rightImg">
 </div>
 
 <!-- SCREEN 4 -->
 <div id="s4" class="screen hidden">
   <div class="card">
     <h1>🎉 Your Day</h1>
-    <p>
-      I hope all the good things find their way to you…  
-      not just today, but always.
-    </p>
+    <p id="text4"></p>
     <button onclick="toS5()">next →</button>
   </div>
 </div>
@@ -167,10 +193,7 @@ img{
 <!-- SCREEN 5 -->
 <div id="s5" class="screen hidden">
   <div class="card">
-    <p>
-      I won’t say much…  
-      but I think you already get it.
-    </p>
+    <p id="text5"></p>
     <button onclick="ending()">last →</button>
   </div>
 </div>
@@ -179,35 +202,26 @@ img{
 <div id="end" class="screen hidden">
   <div class="card">
     <h1>🎂</h1>
-    <p>
-      Once again… Happy Birthday yaaa.  
-      maybe you mean more than I say.
-    </p>
+    <p id="text6"></p>
   </div>
 </div>
 
 <script>
-let text="Today is supposed to be about you… but I just wanted to be part of it somehow.";
-let i=0;
-
 let music=document.getElementById("bgm");
 let cover=document.getElementById("cover");
 
-function start(){
-  music.play();
-  music.volume=0.3;
-  cover.style.animationPlayState="running";
-
-  show("s2","s1");
-  type();
-}
-
-function type(){
-  if(i<text.length){
-    document.getElementById("typing").innerHTML+=text.charAt(i);
-    i++;
-    setTimeout(type,45);
+function typeEffect(text, elementId, speed=40){
+  let i=0;
+  let el=document.getElementById(elementId);
+  el.innerHTML="";
+  function typing(){
+    if(i<text.length){
+      el.innerHTML+=text.charAt(i);
+      i++;
+      setTimeout(typing,speed);
+    }
   }
+  typing();
 }
 
 function show(next,current){
@@ -215,14 +229,43 @@ function show(next,current){
   document.getElementById(next).classList.remove("hidden");
 }
 
-function toS3(){
-  show("s3","s2");
-  setTimeout(()=>document.getElementById("photo").classList.add("clear"),500);
+function start(){
+  music.play();
+  cover.style.animationPlayState="running";
+
+  show("s2","s1");
+  typeEffect("Today is all about you.", "text2");
 }
 
-function toS4(){ show("s4","s3"); }
-function toS5(){ show("s5","s4"); }
-function ending(){ show("end","s5"); }
+function toS3(){
+  show("s3","s2");
+
+  typeEffect("I don’t know why… but somehow, you’re still my favorite. Sorry I couldn’t meet you… I had something to take care of, so I made this for you.","text3");
+
+  setTimeout(()=>{
+    document.getElementById("photo").classList.add("clear");
+    document.getElementById("leftImg").classList.add("show");
+    document.getElementById("rightImg").classList.add("show");
+  },400);
+}
+
+function toS4(){
+  show("s4","s3");
+  typeEffect("I hope all the good things find their way to you… not just today, but always.","text4");
+}
+
+function toS5(){
+  show("s5","s4");
+  typeEffect("I won’t say much… but I think you already get it.","text5");
+}
+
+function ending(){
+  show("end","s5");
+  typeEffect("Once again… Happy Birthday yaa swithirt. maybe you mean more than I say🫶.","text6");
+}
+
+// first screen typing
+typeEffect("I got something for you… just open it.","text1");;
 </script>
 
 </body>
