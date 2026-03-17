@@ -6,19 +6,22 @@
 <title>Happy Birthday Hana 🎂</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI';}
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
 
 body{
   background:linear-gradient(135deg,#ffd6e0,#ffeaf4);
+  background-attachment:fixed;
   overflow:hidden;
 }
 
-/* GLOW */
+/* BACKGROUND GLOW */
 body::before{
   content:"";
-  position:absolute;
-  width:500px;
-  height:500px;
+  position:fixed;
+  width:600px;
+  height:600px;
   background:radial-gradient(circle, rgba(255,77,109,0.2), transparent);
   top:50%;
   left:50%;
@@ -31,38 +34,39 @@ body::before{
   width:100%;
   height:100%;
   display:none;
-  flex-direction:column;
   justify-content:center;
   align-items:center;
-  gap:20px;
-  padding:20px;
+  flex-direction:column;
 }
 .active{display:flex;}
 
-/* FLOATING CARD */
+/* 💎 PREMIUM GLOSSY CARD */
 .card{
-  background:rgba(255,255,255,0.4);
-  backdrop-filter:blur(18px);
+  position:relative;
+  background:rgba(255,255,255,0.25);
+  backdrop-filter:blur(20px);
   border-radius:20px;
-  padding:22px;
-  max-width:350px;
+  padding:25px;
   width:90%;
+  max-width:350px;
   text-align:center;
-  z-index:3;
-  box-shadow:0 15px 40px rgba(0,0,0,0.1);
+
+  border:1px solid rgba(255,255,255,0.4);
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.1),
+    inset 0 1px 0 rgba(255,255,255,0.6),
+    inset 0 -2px 10px rgba(255,255,255,0.2);
+
   animation:float 4s ease-in-out infinite;
 }
 
-/* FLOAT ANIMATION */
 @keyframes float{
-  0%{transform:translateY(0);}
+  0%,100%{transform:translateY(0);}
   50%{transform:translateY(-8px);}
-  100%{transform:translateY(0);}
 }
 
-/* TEXT */
-h1{color:#ff4d6d;}
-p{color:#444;margin-top:10px;line-height:1.4;}
+h1{color:#ff4d6d;font-weight:600;}
+p{margin-top:10px;color:#444;}
 
 /* BUTTON */
 button{
@@ -73,63 +77,29 @@ button{
   background:#ff4d6d;
   color:white;
   cursor:pointer;
-  transition:0.2s;
 }
-button:hover{transform:scale(1.05);}
 
 /* FOTO */
 #photo{
   width:220px;
   border-radius:15px;
   filter:blur(10px);
-  transform:scale(1.05);
   transition:1.5s;
 }
-#photo.clear{
-  filter:blur(0);
-  transform:scale(1);
-}
+#photo.clear{filter:blur(0);}
 
-/* VIDEO */
+/* MEDIA */
 .side-video{
   position:absolute;
   left:5%;
   width:200px;
   border-radius:15px;
-  box-shadow:0 10px 25px rgba(0,0,0,0.2);
 }
-
-/* FOTO KANAN */
 .side-img{
   position:absolute;
   right:5%;
   width:180px;
   border-radius:15px;
-  box-shadow:0 10px 25px rgba(0,0,0,0.2);
-}
-
-/* MOBILE */
-@media (max-width:768px){
-
-  body{overflow:hidden;}
-
-  .screen{
-    justify-content:center;
-  }
-
-  .side-video{
-    top:10%;
-    width:70%;
-  }
-
-  .side-img{
-    bottom:10%;
-    width:70%;
-  }
-
-  #photo{
-    width:75%;
-  }
 }
 
 /* PLAYER */
@@ -137,19 +107,20 @@ button:hover{transform:scale(1.05);}
   position:fixed;
   bottom:15px;
   left:15px;
+  display:flex;
+  align-items:center;
+  gap:10px;
   background:rgba(255,255,255,0.4);
   backdrop-filter:blur(10px);
-  padding:10px 14px;
+  padding:10px 15px;
   border-radius:20px;
-  display:flex;
-  gap:10px;
-  z-index:10;
 }
 
 .music-player img{
-  width:40px;
+  width:50px;
+  height:50px;
   border-radius:50%;
-  animation:spin 8s linear infinite, pulse 2s infinite;
+  animation:spin 8s linear infinite;
   animation-play-state: paused;
 }
 
@@ -158,10 +129,12 @@ button:hover{transform:scale(1.05);}
   to{transform:rotate(360deg);}
 }
 
-@keyframes pulse{
-  0%{transform:scale(1);}
-  50%{transform:scale(1.05);}
-  100%{transform:scale(1);}
+/* MOBILE */
+@media(max-width:768px){
+  .side-video,.side-img{
+    position:relative;
+    width:85%;
+  }
 }
 
 /* POPUP */
@@ -174,11 +147,8 @@ button:hover{transform:scale(1.05);}
   display:none;
   justify-content:center;
   align-items:center;
-  z-index:20;
 }
-.popup img{
-  max-width:90%;
-}
+.popup img{max-width:90%;}
 </style>
 </head>
 
@@ -190,7 +160,10 @@ button:hover{transform:scale(1.05);}
 
 <div class="music-player">
   <img src="cover.jpg" id="cover">
-  <div><p>Risk It All</p></div>
+  <div>
+    <b>Risk It All</b>
+    <p style="font-size:12px">Bruno Mars</p>
+  </div>
 </div>
 
 <div class="popup" id="popup" onclick="closePopup()">
@@ -217,16 +190,15 @@ button:hover{transform:scale(1.05);}
 <!-- S3 -->
 <div id="s3" class="screen">
 
-  <video src="vid.mp4" class="side-video" autoplay muted loop playsinline onclick="toggleVideo(this)"></video>
+  <video src="vid.mp4" class="side-video" autoplay muted loop></video>
 
-  <div class="card">
+  <div class="card" id="draggable">
     <img id="photo" src="hana.jpg" onclick="openPopup(this.src)">
     <p id="text3"></p>
     <button onclick="next()">next</button>
   </div>
 
   <img src="hana2.jpeg" class="side-img" onclick="openPopup(this.src)">
-
 </div>
 
 <!-- S4 -->
@@ -269,6 +241,7 @@ function next(){
   }
 }
 
+/* TEXT */
 function typeEffect(t,id){
   let i=0;
   let el=document.getElementById(id);
@@ -295,8 +268,30 @@ function runText(){
   if(current==5) typeEffect("Once again… Happy Birthday yaa swithirt. you mean more than I say🫶","text6");
 }
 
-function toggleVideo(v){ v.muted=!v.muted; }
+/* DRAG */
+let card=document.getElementById("draggable");
+let isDown=false,startX;
 
+card?.addEventListener("mousedown",e=>{
+  isDown=true;
+  startX=e.clientX;
+});
+document.addEventListener("mousemove",e=>{
+  if(!isDown) return;
+  let move=e.clientX-startX;
+  card.style.transform=`translateX(${move}px)`;
+});
+document.addEventListener("mouseup",()=>isDown=false);
+
+card?.addEventListener("touchstart",e=>{
+  startX=e.touches[0].clientX;
+});
+card?.addEventListener("touchmove",e=>{
+  let move=e.touches[0].clientX-startX;
+  card.style.transform=`translateX(${move}px)`;
+});
+
+/* POPUP */
 function openPopup(src){
   document.getElementById("popupImg").src=src;
   document.getElementById("popup").style.display="flex";
@@ -307,6 +302,7 @@ function closePopup(){
 
 runText();
 
+/* MUSIC */
 let music=document.getElementById("bgm");
 let cover=document.getElementById("cover");
 
