@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Happy Birthday Hana 🎂</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI';}
+
+body{
+  height:100vh;
+  overflow:hidden;
+  background:linear-gradient(135deg,#ffd6e0,#ffeaf4);
+}
+
+/* CARD */
+.card{
+  background:rgba(255,255,255,0.4);
+  backdrop-filter:blur(15px);
+  border-radius:20px;
+  padding:25px;
+  box-shadow:0 10px 40px rgba(255,77,109,0.2);
+  max-width:350px;
+  text-align:center;
+  animation:fadeIn 0.8s ease;
+}
+
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(20px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* SCREEN */
+.screen{
+  position:absolute;
+  width:100%;
+  height:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  transition:0.7s;
+}
+
+/* TEXT */
+h1{color:#ff4d6d;}
+p{margin-top:10px;color:#444;line-height:1.5;}
+
+/* BUTTON */
+button{
+  margin-top:15px;
+  padding:10px 20px;
+  border:none;
+  border-radius:20px;
+  background:#ff4d6d;
+  color:white;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+button:hover{
+  transform:scale(1.05);
+}
+
+/* HIDDEN */
+.hidden{
+  opacity:0;
+  pointer-events:none;
+  transform:scale(0.9);
+}
+
+/* IMAGE */
+img{
+  width:220px;
+  border-radius:15px;
+  filter:blur(10px);
+  transform:scale(1.05);
+  transition:1.5s;
+}
+.clear{
+  filter:blur(0);
+  transform:scale(1);
+}
+
+/* MUSIC PLAYER */
+.music-player{
+  position:fixed;
+  bottom:20px;
+  left:20px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background:rgba(255,255,255,0.4);
+  backdrop-filter:blur(10px);
+  padding:10px 15px;
+  border-radius:20px;
+}
+
+.music-player img{
+  width:50px;
+  height:50px;
+  border-radius:50%;
+  animation:spin 8s linear infinite;
+  animation-play-state: paused;
+}
+
+@keyframes spin{
+  from{transform:rotate(0);}
+  to{transform:rotate(360deg);}
+}
+</style>
+</head>
+
+<body>
+
+<audio id="bgm" loop>
+  <source src="lagu.mp3" type="audio/mpeg">
+</audio>
+
+<!-- PLAYER -->
+<div class="music-player">
+  <img src="cover.jpg" id="cover">
+  <div>
+    <h4>Risk It All</h4>
+    <p>Bruno Mars</p>
+  </div>
+</div>
+
+<!-- SCREEN 1 -->
+<div id="s1" class="screen">
+  <div class="card">
+    <h1>🎂 Happy Birthday, Hana</h1>
+    <p>today is all about you</p>
+    <button onclick="start()">open 🎁</button>
+  </div>
+</div>
+
+<!-- SCREEN 2 -->
+<div id="s2" class="screen hidden">
+  <div class="card">
+    <p id="typing"></p>
+    <button onclick="toS3()">next →</button>
+  </div>
+</div>
+
+<!-- SCREEN 3 -->
+<div id="s3" class="screen hidden">
+  <div class="card">
+    <img id="photo" src="hana.jpg">
+    <p>still one of my favorite girl 🤷‍♂️</p>
+    <button onclick="toS4()">next →</button>
+  </div>
+</div>
+
+<!-- SCREEN 4 -->
+<div id="s4" class="screen hidden">
+  <div class="card">
+    <h1>🎉 Your Day</h1>
+    <p>
+      I hope all the good things find their way to you…  
+      not just today, but always.
+    </p>
+    <button onclick="toS5()">next →</button>
+  </div>
+</div>
+
+<!-- SCREEN 5 -->
+<div id="s5" class="screen hidden">
+  <div class="card">
+    <p>
+      I won’t say much…  
+      but I think you already get it.
+    </p>
+    <button onclick="ending()">last →</button>
+  </div>
+</div>
+
+<!-- END -->
+<div id="end" class="screen hidden">
+  <div class="card">
+    <h1>🎂</h1>
+    <p>
+      Once again… Happy Birthday yaaa.  
+      maybe you mean more than I say.
+    </p>
+  </div>
+</div>
+
+<script>
+let text="Today is supposed to be about you… but I just wanted to be part of it somehow.";
+let i=0;
+
+let music=document.getElementById("bgm");
+let cover=document.getElementById("cover");
+
+function start(){
+  music.play();
+  music.volume=0.3;
+  cover.style.animationPlayState="running";
+
+  show("s2","s1");
+  type();
+}
+
+function type(){
+  if(i<text.length){
+    document.getElementById("typing").innerHTML+=text.charAt(i);
+    i++;
+    setTimeout(type,45);
+  }
+}
+
+function show(next,current){
+  document.getElementById(current).classList.add("hidden");
+  document.getElementById(next).classList.remove("hidden");
+}
+
+function toS3(){
+  show("s3","s2");
+  setTimeout(()=>document.getElementById("photo").classList.add("clear"),500);
+}
+
+function toS4(){ show("s4","s3"); }
+function toS5(){ show("s5","s4"); }
+function ending(){ show("end","s5"); }
+</script>
+
+</body>
+</html>
