@@ -13,43 +13,17 @@ body{
   overflow:hidden;
 }
 
-/* PROGRESS BAR */
-.progress{
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:5px;
-  display:flex;
-  gap:3px;
-  padding:5px;
-}
-
-.bar{
-  flex:1;
-  height:100%;
-  background:rgba(255,255,255,0.4);
-  border-radius:5px;
-  overflow:hidden;
-}
-
-.fill{
-  height:100%;
-  width:0%;
-  background:white;
-  transition:width linear;
-}
-
 /* SCREEN */
 .screen{
+  min-height:100vh;
   display:none;
-  height:100vh;
   justify-content:center;
   align-items:center;
   flex-direction:column;
   gap:15px;
   padding:20px;
 }
+
 .active{display:flex;}
 
 /* CARD */
@@ -124,21 +98,12 @@ button{
 }
 .popup img{
   max-width:90%;
+  border-radius:10px;
 }
 </style>
 </head>
 
 <body>
-
-<!-- PROGRESS -->
-<div class="progress">
-  <div class="bar"><div class="fill" id="p0"></div></div>
-  <div class="bar"><div class="fill" id="p1"></div></div>
-  <div class="bar"><div class="fill" id="p2"></div></div>
-  <div class="bar"><div class="fill" id="p3"></div></div>
-  <div class="bar"><div class="fill" id="p4"></div></div>
-  <div class="bar"><div class="fill" id="p5"></div></div>
-</div>
 
 <audio id="bgm" loop>
   <source src="lagu.mp3">
@@ -158,52 +123,63 @@ button{
   <div class="card">
     <h1>🎂 Happy Birthday Hana</h1>
     <p id="text1"></p>
+    <button onclick="next()">open</button>
   </div>
 </div>
 
 <div id="s2" class="screen">
-  <div class="card"><p id="text2"></p></div>
+  <div class="card">
+    <p id="text2"></p>
+    <button onclick="next()">next</button>
+  </div>
 </div>
 
 <div id="s3" class="screen">
   <video src="vid.mp4" class="side-video" autoplay muted loop onclick="toggleVideo(this)"></video>
+
   <div class="card">
     <img id="photo" src="hana.jpg" onclick="openPopup(this.src)">
     <p id="text3"></p>
+    <button onclick="next()">next</button>
   </div>
+
   <img src="hana2.jpeg" class="side-img" onclick="openPopup(this.src)">
 </div>
 
 <div id="s4" class="screen">
-  <div class="card"><p id="text4"></p></div>
+  <div class="card">
+    <p id="text4"></p>
+    <button onclick="next()">next</button>
+  </div>
 </div>
 
 <div id="s5" class="screen">
-  <div class="card"><p id="text5"></p></div>
+  <div class="card">
+    <p id="text5"></p>
+    <button onclick="next()">last</button>
+  </div>
 </div>
 
 <div id="s6" class="screen">
-  <div class="card"><p id="text6"></p></div>
+  <div class="card">
+    <p id="text6"></p>
+  </div>
 </div>
 
 <script>
 let screens=["s1","s2","s3","s4","s5","s6"];
 let current=0;
-let duration=4000; // durasi tiap slide
-let timer;
-let paused=false;
 
 function showScreen(i){
   document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
   document.getElementById(screens[i]).classList.add("active");
-  runText();
-  startProgress(i);
 }
 
 function next(){
   if(current<screens.length-1){
     current++;
     showScreen(current);
+    runText();
   }
 }
 
@@ -211,45 +187,21 @@ function prev(){
   if(current>0){
     current--;
     showScreen(current);
+    runText();
   }
-}
-
-/* PROGRESS */
-function startProgress(i){
-  clearInterval(timer);
-  let fill=document.getElementById("p"+i);
-  document.querySelectorAll(".fill").forEach(f=>f.style.width="0%");
-  let w=0;
-
-  timer=setInterval(()=>{
-    if(!paused){
-      w+=100/(duration/50);
-      fill.style.width=w+"%";
-      if(w>=100){
-        clearInterval(timer);
-        next();
-      }
-    }
-  },50);
 }
 
 /* SWIPE */
 let startX=0;
+
 document.addEventListener("touchstart",e=>{
   startX=e.touches[0].clientX;
-  paused=true;
-});
-document.addEventListener("touchend",e=>{
-  let endX=e.changedTouches[0].clientX;
-  paused=false;
-  if(endX-startX>50) prev();
-  if(startX-endX>50) next();
 });
 
-/* CLICK NAV */
-document.addEventListener("click",e=>{
-  if(e.clientX < window.innerWidth/2) prev();
-  else next();
+document.addEventListener("touchend",e=>{
+  let endX=e.changedTouches[0].clientX;
+  if(endX-startX>50) prev();
+  if(startX-endX>50) next();
 });
 
 /* TEXT */
@@ -262,7 +214,7 @@ function typeEffect(t,id){
     if(i<t.length){
       el.innerHTML+=t[i];
       i++;
-      setTimeout(type,25);
+      setTimeout(type,30);
     }
   }
   type();
@@ -282,7 +234,11 @@ function runText(){
 
 /* MEDIA */
 function toggleVideo(v){
-  v.muted = !v.muted;
+  if(v.muted){
+    v.muted=false;
+  } else {
+    v.pause();
+  }
 }
 
 function openPopup(src){
@@ -294,7 +250,7 @@ function closePopup(){
 }
 
 /* START */
-showScreen(0);
+runText();
 
 let music=document.getElementById("bgm");
 let cover=document.getElementById("cover");
