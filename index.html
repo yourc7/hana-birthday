@@ -40,9 +40,8 @@ body::before{
 }
 .active{display:flex;}
 
-/* 💎 PREMIUM GLOSSY CARD */
+/* GLOSSY CARD */
 .card{
-  position:relative;
   background:rgba(255,255,255,0.25);
   backdrop-filter:blur(20px);
   border-radius:20px;
@@ -50,6 +49,7 @@ body::before{
   width:90%;
   max-width:350px;
   text-align:center;
+  z-index:3;
 
   border:1px solid rgba(255,255,255,0.4);
   box-shadow:
@@ -79,7 +79,7 @@ button{
   cursor:pointer;
 }
 
-/* FOTO */
+/* FOTO TENGAH */
 #photo{
   width:220px;
   border-radius:15px;
@@ -88,18 +88,28 @@ button{
 }
 #photo.clear{filter:blur(0);}
 
-/* MEDIA */
+/* 🎥 VIDEO KIRI CINEMATIC */
 .side-video{
   position:absolute;
-  left:5%;
-  width:200px;
-  border-radius:15px;
+  left:0;
+  top:50%;
+  transform:translateY(-50%);
+  width:35%;
+  height:80%;
+  object-fit:cover;
+  border-radius:0 20px 20px 0;
 }
+
+/* 📸 FOTO KANAN CINEMATIC */
 .side-img{
   position:absolute;
-  right:5%;
-  width:180px;
-  border-radius:15px;
+  right:0;
+  top:50%;
+  transform:translateY(-50%);
+  width:30%;
+  height:75%;
+  object-fit:cover;
+  border-radius:20px 0 0 20px;
 }
 
 /* PLAYER */
@@ -114,6 +124,7 @@ button{
   backdrop-filter:blur(10px);
   padding:10px 15px;
   border-radius:20px;
+  z-index:10;
 }
 
 .music-player img{
@@ -129,11 +140,28 @@ button{
   to{transform:rotate(360deg);}
 }
 
-/* MOBILE */
+/* 📱 MOBILE FIX */
 @media(max-width:768px){
-  .side-video,.side-img{
+  body{overflow:auto;}
+
+  .screen{
     position:relative;
-    width:85%;
+    height:auto;
+    min-height:100vh;
+    padding:30px 20px 80px;
+  }
+
+  .side-video,
+  .side-img{
+    position:relative;
+    width:100%;
+    height:auto;
+    transform:none;
+    border-radius:15px;
+  }
+
+  #photo{
+    width:80%;
   }
 }
 
@@ -147,6 +175,7 @@ button{
   display:none;
   justify-content:center;
   align-items:center;
+  z-index:20;
 }
 .popup img{max-width:90%;}
 </style>
@@ -190,7 +219,7 @@ button{
 <!-- S3 -->
 <div id="s3" class="screen">
 
-  <video src="vid.mp4" class="side-video" autoplay muted loop></video>
+  <video src="vid.mp4" class="side-video" autoplay muted loop playsinline></video>
 
   <div class="card" id="draggable">
     <img id="photo" src="hana.jpg" onclick="openPopup(this.src)">
@@ -268,7 +297,7 @@ function runText(){
   if(current==5) typeEffect("Once again… Happy Birthday yaa swithirt. you mean more than I say🫶","text6");
 }
 
-/* DRAG */
+/* DRAG CARD */
 let card=document.getElementById("draggable");
 let isDown=false,startX;
 
