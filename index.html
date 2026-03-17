@@ -9,28 +9,16 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI';}
 
 body{
-  height:100vh;
-  overflow:hidden;
   background:linear-gradient(135deg,#ffd6e0,#ffeaf4);
-}
-
-/* OVERLAY */
-body::after{
-  content:"";
-  position:absolute;
-  width:100%;
-  height:100%;
-  background:radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.1));
 }
 
 /* SCREEN */
 .screen{
-  position:absolute;
-  width:100%;
-  height:100%;
+  min-height:100vh;
   display:flex;
   justify-content:center;
   align-items:center;
+  flex-direction:column;
 }
 
 /* CARD */
@@ -47,8 +35,8 @@ body::after{
 }
 
 /* TEXT */
-h1{color:#ff4d6d;font-size:22px;}
-p{margin-top:10px;color:#444;font-size:14px;line-height:1.5;}
+h1{color:#ff4d6d;}
+p{margin-top:10px;color:#444;}
 
 /* BUTTON */
 button{
@@ -58,78 +46,93 @@ button{
   border-radius:20px;
   background:#ff4d6d;
   color:white;
-  cursor:pointer;
 }
 
 /* HIDDEN */
-.hidden{
-  opacity:0;
-  pointer-events:none;
-  transform:scale(0.95);
-}
+.hidden{display:none;}
 
-/* FOTO TENGAH */
+/* FOTO */
 #photo{
   width:70%;
   max-width:230px;
   border-radius:15px;
-  filter:blur(12px);
-  transition:2s;
+  filter:blur(10px);
+  transition:1.5s;
 }
-#photo.clear{
-  filter:blur(0);
-}
+#photo.clear{filter:blur(0);}
 
-/* VIDEO KIRI */
-.side-video{
+/* SIDE MEDIA DEFAULT (PC) */
+.side-video,
+.side-img{
   position:absolute;
   width:200px;
   border-radius:15px;
   opacity:0;
   top:50%;
-  left:6%;
+  transition:1s;
+}
+
+.side-video{
+  left:5%;
   transform:translateY(-50%) translateX(-80px);
-  transition:1s;
 }
 
-.side-video.show{
-  opacity:0.85;
-  transform:translateY(-50%) translateX(0);
-}
-
-/* FOTO KANAN */
 .side-img{
-  position:absolute;
-  width:180px;
-  border-radius:15px;
-  opacity:0;
-  top:50%;
-  right:6%;
+  right:5%;
   transform:translateY(-50%) translateX(80px);
-  transition:1s;
 }
 
+.side-video.show,
 .side-img.show{
-  opacity:0.85;
+  opacity:0.8;
   transform:translateY(-50%) translateX(0);
+}
+
+/* ================= MOBILE ================= */
+@media (max-width:768px){
+
+  .screen{
+    flex-direction:column;
+    gap:15px;
+    padding:20px;
+  }
+
+  /* ubah jadi normal flow */
+  .side-video,
+  .side-img{
+    position:relative;
+    top:auto;
+    left:auto;
+    right:auto;
+    transform:none;
+    width:90%;
+    opacity:1;
+  }
+
+  .side-video.show,
+  .side-img.show{
+    transform:none;
+  }
+
+  #photo{
+    width:80%;
+  }
 }
 
 /* PLAYER */
 .music-player{
   position:fixed;
-  bottom:15px;
-  left:15px;
-  display:flex;
-  gap:10px;
-  background:rgba(255,255,255,0.35);
-  backdrop-filter:blur(10px);
+  bottom:10px;
+  left:10px;
+  background:rgba(255,255,255,0.4);
   padding:8px 12px;
   border-radius:20px;
+  display:flex;
+  gap:10px;
 }
 
 .music-player img{
   width:40px;
-  height:40px;
   border-radius:50%;
   animation:spin 8s linear infinite;
   animation-play-state: paused;
@@ -139,64 +142,40 @@ button{
   from{transform:rotate(0);}
   to{transform:rotate(360deg);}
 }
-
-/* ================= MOBILE ================= */
-@media (max-width:768px){
-
-  body{overflow:auto;}
-
-  .screen{
-    flex-direction:column;
-    padding:20px;
-  }
-
-  .side-video,
-  .side-img{
-    display:none;
-  }
-
-  #photo{
-    width:85%;
-  }
-
-  h1{font-size:20px;}
-  p{font-size:13px;}
-}
 </style>
 </head>
 
 <body>
 
 <audio id="bgm" loop>
-  <source src="lagu.mp3" type="audio/mpeg">
+  <source src="lagu.mp3">
 </audio>
 
 <div class="music-player">
   <img src="cover.jpg" id="cover">
   <div>
-    <h4>Risk It All</h4>
-    <p>Bruno Mars</p>
+    <p>Risk It All</p>
   </div>
 </div>
 
-<!-- SCREEN 1 -->
+<!-- S1 -->
 <div id="s1" class="screen">
   <div class="card">
-    <h1>🎂 Happy Birthday, Hana</h1>
+    <h1>🎂 Happy Birthday Hana</h1>
     <p id="text1"></p>
-    <button onclick="start()">open 🎁</button>
+    <button onclick="start()">open</button>
   </div>
 </div>
 
-<!-- SCREEN 2 -->
+<!-- S2 -->
 <div id="s2" class="screen hidden">
   <div class="card">
     <p id="text2"></p>
-    <button onclick="toS3()">next →</button>
+    <button onclick="toS3()">next</button>
   </div>
 </div>
 
-<!-- SCREEN 3 -->
+<!-- S3 -->
 <div id="s3" class="screen hidden">
 
   <video src="vid.mp4" class="side-video" id="leftVid" autoplay muted loop></video>
@@ -204,34 +183,32 @@ button{
   <div class="card">
     <img id="photo" src="hana.jpg">
     <p id="text3"></p>
-    <button onclick="toS4()">next →</button>
+    <button onclick="toS4()">next</button>
   </div>
 
   <img src="hana2.jpeg" class="side-img" id="rightImg">
 
 </div>
 
-<!-- SCREEN 4 -->
+<!-- S4 -->
 <div id="s4" class="screen hidden">
   <div class="card">
-    <h1>🎉 Your Day</h1>
     <p id="text4"></p>
-    <button onclick="toS5()">next →</button>
+    <button onclick="toS5()">next</button>
   </div>
 </div>
 
-<!-- SCREEN 5 -->
+<!-- S5 -->
 <div id="s5" class="screen hidden">
   <div class="card">
     <p id="text5"></p>
-    <button onclick="ending()">last →</button>
+    <button onclick="ending()">last</button>
   </div>
 </div>
 
 <!-- END -->
 <div id="end" class="screen hidden">
   <div class="card">
-    <h1>🎂</h1>
     <p id="text6"></p>
   </div>
 </div>
@@ -240,18 +217,18 @@ button{
 let music=document.getElementById("bgm");
 let cover=document.getElementById("cover");
 
-function typeEffect(text, id){
+function typeEffect(t,id){
   let i=0;
   let el=document.getElementById(id);
   el.innerHTML="";
-  function typing(){
-    if(i<text.length){
-      el.innerHTML+=text.charAt(i);
+  function type(){
+    if(i<t.length){
+      el.innerHTML+=t[i];
       i++;
-      setTimeout(typing,40);
+      setTimeout(type,30);
     }
   }
-  typing();
+  type();
 }
 
 function show(n,c){
@@ -262,36 +239,32 @@ function show(n,c){
 function start(){
   music.play();
   cover.style.animationPlayState="running";
-
   show("s2","s1");
-  typeEffect("I got something for you… just open it.","text2");
+  typeEffect("I got something for you…","text2");
 }
 
 function toS3(){
   show("s3","s2");
+  typeEffect("you’re still my favorite.","text3");
 
-  typeEffect("I don’t know why… but somehow, you’re still my favorite.","text3");
-
-  setTimeout(()=>{
-    document.getElementById("photo").classList.add("clear");
-    document.getElementById("leftVid").classList.add("show");
-    document.getElementById("rightImg").classList.add("show");
-  },500);
+  document.getElementById("photo").classList.add("clear");
+  document.getElementById("leftVid").classList.add("show");
+  document.getElementById("rightImg").classList.add("show");
 }
 
 function toS4(){
   show("s4","s3");
-  typeEffect("I hope all the good things find their way to you… not just today, but always.","text4");
+  typeEffect("I hope all good things come to you.","text4");
 }
 
 function toS5(){
   show("s5","s4");
-  typeEffect("Sorry I couldn’t meet you… I had something to take care of, so I made this for you. Hope you like it 🙂","text5");
+  typeEffect("I made this for you.","text5");
 }
 
 function ending(){
   show("end","s5");
-  typeEffect("Once again… Happy Birthday. you mean more than I say 🫶","text6");
+  typeEffect("Happy Birthday 🤍","text6");
 }
 
 typeEffect("I got something for you…","text1");
