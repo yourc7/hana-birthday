@@ -13,16 +13,13 @@ body{
   background:linear-gradient(135deg,#ffd6e0,#ffeaf4);
 }
 
-/* BACKGROUND GLOW */
+/* CINEMATIC OVERLAY */
 body::after{
   content:"";
   position:absolute;
-  width:500px;
-  height:500px;
-  background:radial-gradient(circle, rgba(255,77,109,0.2), transparent);
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
+  width:100%;
+  height:100%;
+  background:radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.1));
 }
 
 /* SCREEN */
@@ -33,19 +30,24 @@ body::after{
   display:flex;
   justify-content:center;
   align-items:center;
-  transition:0.6s;
 }
 
 /* CARD */
 .card{
-  background:rgba(255,255,255,0.4);
+  background:rgba(255,255,255,0.35);
   backdrop-filter:blur(15px);
   border-radius:20px;
   padding:25px;
-  box-shadow:0 10px 40px rgba(255,77,109,0.2);
+  box-shadow:0 10px 40px rgba(0,0,0,0.15);
   max-width:350px;
   text-align:center;
   z-index:2;
+  animation:fadeUp 1s ease;
+}
+
+@keyframes fadeUp{
+  from{opacity:0; transform:translateY(20px);}
+  to{opacity:1; transform:translateY(0);}
 }
 
 /* TEXT */
@@ -69,37 +71,53 @@ button:hover{transform:scale(1.05);}
 .hidden{
   opacity:0;
   pointer-events:none;
-  transform:scale(0.9);
+  transform:scale(0.95);
 }
 
 /* FOTO TENGAH */
 #photo{
-  width:220px;
+  width:230px;
   border-radius:15px;
-  filter:blur(10px);
-  transition:1.5s;
+  filter:blur(12px);
+  transform:scale(1.05);
+  transition:2s;
 }
 #photo.clear{
   filter:blur(0);
+  transform:scale(1);
 }
 
-/* FOTO SAMPING */
-.side-img{
+/* VIDEO KIRI */
+.side-video{
   position:absolute;
-  width:180px;
+  width:220px;
   border-radius:15px;
   opacity:0;
-  filter:blur(3px);
   top:50%;
-  transform:translateY(-50%);
-  transition:1s;
+  left:6%;
+  transform:translateY(-50%) translateX(-80px) rotate(-6deg);
+  transition:1.2s ease;
 }
 
-.left{ left:8%; transform:translateY(-50%) translateX(-50px) rotate(-8deg); }
-.right{ right:8%; transform:translateY(-50%) translateX(50px) rotate(8deg); }
+.side-video.show{
+  opacity:0.85;
+  transform:translateY(-50%) translateX(0) rotate(0);
+}
+
+/* FOTO KANAN */
+.side-img{
+  position:absolute;
+  width:200px;
+  border-radius:15px;
+  opacity:0;
+  top:50%;
+  right:6%;
+  transform:translateY(-50%) translateX(80px) rotate(6deg);
+  transition:1.2s ease;
+}
 
 .side-img.show{
-  opacity:0.7;
+  opacity:0.8;
   transform:translateY(-50%) translateX(0) rotate(0);
 }
 
@@ -110,7 +128,7 @@ button:hover{transform:scale(1.05);}
   left:20px;
   display:flex;
   gap:10px;
-  background:rgba(255,255,255,0.4);
+  background:rgba(255,255,255,0.35);
   backdrop-filter:blur(10px);
   padding:10px 15px;
   border-radius:20px;
@@ -170,15 +188,20 @@ button:hover{transform:scale(1.05);}
 
 <!-- SCREEN 3 -->
 <div id="s3" class="screen hidden">
-  <img src="foto1.jpg" class="side-img left" id="leftImg">
-  
+
+  <!-- VIDEO KIRI -->
+  <video src="vid1.mp4" class="side-video" id="leftVid" autoplay muted loop></video>
+
+  <!-- TENGAH -->
   <div class="card">
     <img id="photo" src="hana.jpg">
     <p id="text3"></p>
     <button onclick="toS4()">next →</button>
   </div>
 
-  <img src="foto2.jpg" class="side-img right" id="rightImg">
+  <!-- FOTO KANAN -->
+  <img src="foto2.jpg" class="side-img" id="rightImg">
+
 </div>
 
 <!-- SCREEN 4 -->
@@ -210,23 +233,23 @@ button:hover{transform:scale(1.05);}
 let music=document.getElementById("bgm");
 let cover=document.getElementById("cover");
 
-function typeEffect(text, elementId, speed=40){
+function typeEffect(text, id){
   let i=0;
-  let el=document.getElementById(elementId);
+  let el=document.getElementById(id);
   el.innerHTML="";
   function typing(){
     if(i<text.length){
       el.innerHTML+=text.charAt(i);
       i++;
-      setTimeout(typing,speed);
+      setTimeout(typing,40);
     }
   }
   typing();
 }
 
-function show(next,current){
-  document.getElementById(current).classList.add("hidden");
-  document.getElementById(next).classList.remove("hidden");
+function show(n,c){
+  document.getElementById(c).classList.add("hidden");
+  document.getElementById(n).classList.remove("hidden");
 }
 
 function start(){
@@ -234,19 +257,19 @@ function start(){
   cover.style.animationPlayState="running";
 
   show("s2","s1");
-  typeEffect("Today is all about you.", "text2");
+  typeEffect("Today is all about you.","text2");
 }
 
 function toS3(){
   show("s3","s2");
 
-  typeEffect("I don’t know why… but somehow, you’re still my favorite. Sorry I couldn’t meet you… I had something to take care of, so I made this for you.","text3");
+  typeEffect("I don’t know why… but somehow, you’re still my favorite.","text3");
 
   setTimeout(()=>{
     document.getElementById("photo").classList.add("clear");
-    document.getElementById("leftImg").classList.add("show");
+    document.getElementById("leftVid").classList.add("show");
     document.getElementById("rightImg").classList.add("show");
-  },400);
+  },500);
 }
 
 function toS4(){
@@ -256,16 +279,16 @@ function toS4(){
 
 function toS5(){
   show("s5","s4");
-  typeEffect("I won’t say much… but I think you already get it.","text5");
+  typeEffect("Sorry I couldn’t meet you… I had something to take care of, so I made this for you. Hope you like it🙂‍↔️","text5");
 }
 
 function ending(){
   show("end","s5");
-  typeEffect("Once again… Happy Birthday yaa swithirt. maybe you mean more than I say🫶.","text6");
+  typeEffect("Once again… Happy Birthday yaa swithirt. you mean more than I say🫶","text6");
 }
 
-// first screen typing
-typeEffect("I got something for you… just open it.","text1");;
+// first text
+typeEffect("I got something for you…","text1");
 </script>
 
 </body>
