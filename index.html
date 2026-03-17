@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Happy Birthday Hana 🎂</title>
 
 <style>
@@ -13,7 +14,7 @@ body{
   background:linear-gradient(135deg,#ffd6e0,#ffeaf4);
 }
 
-/* CINEMATIC OVERLAY */
+/* OVERLAY */
 body::after{
   content:"";
   position:absolute;
@@ -37,22 +38,17 @@ body::after{
   background:rgba(255,255,255,0.35);
   backdrop-filter:blur(15px);
   border-radius:20px;
-  padding:25px;
+  padding:20px;
   box-shadow:0 10px 40px rgba(0,0,0,0.15);
   max-width:350px;
+  width:90%;
   text-align:center;
   z-index:2;
-  animation:fadeUp 1s ease;
-}
-
-@keyframes fadeUp{
-  from{opacity:0; transform:translateY(20px);}
-  to{opacity:1; transform:translateY(0);}
 }
 
 /* TEXT */
-h1{color:#ff4d6d;}
-p{margin-top:10px;color:#444;}
+h1{color:#ff4d6d;font-size:22px;}
+p{margin-top:10px;color:#444;font-size:14px;line-height:1.5;}
 
 /* BUTTON */
 button{
@@ -63,9 +59,7 @@ button{
   background:#ff4d6d;
   color:white;
   cursor:pointer;
-  transition:0.2s;
 }
-button:hover{transform:scale(1.05);}
 
 /* HIDDEN */
 .hidden{
@@ -76,69 +70,68 @@ button:hover{transform:scale(1.05);}
 
 /* FOTO TENGAH */
 #photo{
-  width:230px;
+  width:70%;
+  max-width:230px;
   border-radius:15px;
   filter:blur(12px);
-  transform:scale(1.05);
   transition:2s;
 }
 #photo.clear{
   filter:blur(0);
-  transform:scale(1);
 }
 
 /* VIDEO KIRI */
 .side-video{
   position:absolute;
-  width:220px;
+  width:200px;
   border-radius:15px;
   opacity:0;
   top:50%;
   left:6%;
-  transform:translateY(-50%) translateX(-80px) rotate(-6deg);
-  transition:1.2s ease;
+  transform:translateY(-50%) translateX(-80px);
+  transition:1s;
 }
 
 .side-video.show{
   opacity:0.85;
-  transform:translateY(-50%) translateX(0) rotate(0);
+  transform:translateY(-50%) translateX(0);
 }
 
 /* FOTO KANAN */
 .side-img{
   position:absolute;
-  width:200px;
+  width:180px;
   border-radius:15px;
   opacity:0;
   top:50%;
   right:6%;
-  transform:translateY(-50%) translateX(80px) rotate(6deg);
-  transition:1.2s ease;
+  transform:translateY(-50%) translateX(80px);
+  transition:1s;
 }
 
 .side-img.show{
-  opacity:0.8;
-  transform:translateY(-50%) translateX(0) rotate(0);
+  opacity:0.85;
+  transform:translateY(-50%) translateX(0);
 }
 
 /* PLAYER */
 .music-player{
   position:fixed;
-  bottom:20px;
-  left:20px;
+  bottom:15px;
+  left:15px;
   display:flex;
   gap:10px;
   background:rgba(255,255,255,0.35);
   backdrop-filter:blur(10px);
-  padding:10px 15px;
+  padding:8px 12px;
   border-radius:20px;
 }
 
 .music-player img{
-  width:50px;
-  height:50px;
+  width:40px;
+  height:40px;
   border-radius:50%;
-  animation:spin 8s linear infinite, pulse 2s infinite;
+  animation:spin 8s linear infinite;
   animation-play-state: paused;
 }
 
@@ -147,10 +140,27 @@ button:hover{transform:scale(1.05);}
   to{transform:rotate(360deg);}
 }
 
-@keyframes pulse{
-  0%{transform:scale(1);}
-  50%{transform:scale(1.05);}
-  100%{transform:scale(1);}
+/* ================= MOBILE ================= */
+@media (max-width:768px){
+
+  body{overflow:auto;}
+
+  .screen{
+    flex-direction:column;
+    padding:20px;
+  }
+
+  .side-video,
+  .side-img{
+    display:none;
+  }
+
+  #photo{
+    width:85%;
+  }
+
+  h1{font-size:20px;}
+  p{font-size:13px;}
 }
 </style>
 </head>
@@ -189,17 +199,14 @@ button:hover{transform:scale(1.05);}
 <!-- SCREEN 3 -->
 <div id="s3" class="screen hidden">
 
-  <!-- VIDEO KIRI -->
   <video src="vid.mp4" class="side-video" id="leftVid" autoplay muted loop></video>
 
-  <!-- TENGAH -->
   <div class="card">
     <img id="photo" src="hana.jpg">
     <p id="text3"></p>
     <button onclick="toS4()">next →</button>
   </div>
 
-  <!-- FOTO KANAN -->
   <img src="hana2.jpeg" class="side-img" id="rightImg">
 
 </div>
@@ -257,7 +264,7 @@ function start(){
   cover.style.animationPlayState="running";
 
   show("s2","s1");
-  typeEffect("Today is all about you.","text2");
+  typeEffect("I got something for you… just open it.","text2");
 }
 
 function toS3(){
@@ -279,15 +286,14 @@ function toS4(){
 
 function toS5(){
   show("s5","s4");
-  typeEffect("Sorry I couldn’t meet you… I had something to take care of, so I made this for you. Hope you like it🙂‍↔️","text5");
+  typeEffect("Sorry I couldn’t meet you… I had something to take care of, so I made this for you. Hope you like it 🙂","text5");
 }
 
 function ending(){
   show("end","s5");
-  typeEffect("Once again… Happy Birthday yaa swithirt. you mean more than I say🫶","text6");
+  typeEffect("Once again… Happy Birthday. you mean more than I say 🫶","text6");
 }
 
-// first text
 typeEffect("I got something for you…","text1");
 </script>
 
